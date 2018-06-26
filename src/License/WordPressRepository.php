@@ -67,6 +67,11 @@ class WordPressRepository implements Repository {
 			$date_expires->setTime( 0, 0, 0 );
 		}
 
+		$license_date = $license->get_date_created()->format( 'Y-m-d' );
+		if ( ! $license_date ) {
+			$license_date = date( 'Y-m-d', time() );
+		}
+
 		// setup array with data
 		$data = wp_parse_args( array(
 			'license_key'      => $license->get_key(),
@@ -75,7 +80,7 @@ class WordPressRepository implements Repository {
 			'activation_email' => $license->get_activation_email(),
 			'product_id'       => $license->get_product_id(),
 			'activation_limit' => $license->get_activation_limit(),
-			'date_created'     => $license->get_date_created()->format( 'Y-m-d' ),
+			'date_created'     => $license_date,
 			'date_expires'     => $date_expires->format( 'Y-m-d' )
 		), $defaults );
 
