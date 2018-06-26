@@ -256,9 +256,9 @@ class Activation {
 					}
 
 					// response
-					$response = apply_filters( 'license_wp_api_activation_response', array(
+					$response = apply_filters( 'license_wp_api_deactivation_response', array(
 						'success' => true,
-					) );
+					), $activation, $license );
 
 					// send JSON the WP way
 					wp_send_json( $response );
