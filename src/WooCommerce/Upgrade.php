@@ -16,12 +16,14 @@ class Upgrade {
 				// add renewal to cart
 				$this->add_upgrade_to_cart( $_GET['upgrade_license'], $_GET['new_license'] );
 			}
-
 		} );
 
 		// WooCommerce filters to make the renewal work
 		add_filter( 'woocommerce_add_cart_item', array( $this, 'add_cart_item' ), 10, 1 );
-		add_filter( 'woocommerce_get_cart_item_from_session', array( $this, 'get_cart_item_from_session' ), 10, 2 );
+		add_filter( 'woocommerce_get_cart_item_from_session', array(
+			$this,
+			'get_cart_item_from_session'
+		), 10, 2 );
 		add_action( 'woocommerce_checkout_create_order_line_item', array( $this, 'order_item_meta' ), 10, 4 );
 	}
 
@@ -126,7 +128,6 @@ class Upgrade {
 
 			// generate new cart item
 			$cart_item = $this->generate_new_cart_item( $cart_item );
-
 		}
 
 		return $cart_item;
@@ -145,7 +146,6 @@ class Upgrade {
 
 			// generate new cart item
 			$cart_item = $this->generate_new_cart_item( $cart_item );
-
 		}
 
 		return $cart_item;
@@ -155,14 +155,14 @@ class Upgrade {
 	 * order_item_meta function for storing the meta in the order line items
 	 *
 	 * @param \WC_Order_Item $item
-	 * @param string        $cart_item_key
-	 * @param array         $values
+	 * @param string         $cart_item_key
+	 * @param array          $values
 	 * @param \WC_Order      $order
 	 */
 	public function order_item_meta( $item, $cart_item_key, $values, $order ) {
+		// TODO: may be use compatibility methods
 		if ( isset( $values['upgrading_key'] ) ) {
-			$item->add_meta_data( __( '_upgrading_key', 'license-wp' ), $values['upgrading_key'], true );
+			$item->add_meta_data( '_upgrading_key', $values['upgrading_key'], true );
 		}
 	}
-
 }

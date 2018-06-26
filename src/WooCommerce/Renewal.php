@@ -16,12 +16,14 @@ class Renewal {
 				// add renewal to cart
 				$this->add_renewal_to_cart( $_GET['renew_license'], $_GET['activation_email'] );
 			}
-
 		} );
 
 		// WooCommerce filters to make the renewal work
 		add_filter( 'woocommerce_add_cart_item', array( $this, 'add_cart_item' ), 10, 1 );
-		add_filter( 'woocommerce_get_cart_item_from_session', array( $this, 'get_cart_item_from_session' ), 10, 2 );
+		add_filter( 'woocommerce_get_cart_item_from_session', array(
+			$this,
+			'get_cart_item_from_session'
+		), 10, 2 );
 		add_action( 'woocommerce_checkout_create_order_line_item', array( $this, 'order_item_meta' ), 10, 4 );
 	}
 
@@ -91,13 +93,18 @@ class Renewal {
 	 */
 	public function add_cart_item( $cart_item ) {
 		if ( isset( $cart_item['renewing_key'] ) ) {
-			$price            = $cart_item['data']->get_price();
+			/**
+			 * @var \WC_Product $item
+			 */
+			$item             = $cart_item['data'];
+			$price            = $item->get_price();
 			$discount         = ( $price / 100 ) * 30; // @todo this should become an option
 			$discounted_price = $price - $discount;
 
-			$cart_item['data']->set_price( $discounted_price );
-			$cart_item['data']->set_name( $cart_item['data']->get_name() . ' (' . __( 'Renewal', 'license-wp' ) . ')' );
+			$item->set_price( $discounted_price );
+			$item->set_name( $item->get_name() . ' (' . __( 'Renewal', 'license-wp' ) . ')' );
 		}
+
 		return $cart_item;
 	}
 
@@ -111,15 +118,20 @@ class Renewal {
 	 */
 	public function get_cart_item_from_session( $cart_item, $values ) {
 		if ( isset( $values['renewing_key'] ) ) {
-			$price            = $cart_item['data']->get_price();
+			/**
+			 * @var \WC_Product $item
+			 */
+			$item             = $cart_item['data'];
+			$price            = $item->get_price();
 			$discount         = ( $price / 100 ) * 30;  // @todo this should become an option
 			$discounted_price = $price - $discount;
 
-			$cart_item['data']->set_price( $discounted_price );
-			$cart_item['data']->set_name( $cart_item['data']->get_name() . ' (' . __( 'Renewal', 'license-wp' ) . ')' );
+			$item->set_price( $discounted_price );
+			$item->set_name( $item->get_name() . ' (' . __( 'Renewal', 'license-wp' ) . ')' );
 
 			$cart_item['renewing_key'] = $values['renewing_key'];
 		}
+
 		return $cart_item;
 	}
 
@@ -127,14 +139,14 @@ class Renewal {
 	 * order_item_meta function for storing the meta in the order line items
 	 *
 	 * @param \WC_Order_Item $item
-	 * @param string        $cart_item_key
-	 * @param array         $values
+	 * @param string         $cart_item_key
+	 * @param array          $values
 	 * @param \WC_Order      $order
 	 */
 	public function order_item_meta( $item, $cart_item_key, $values, $order ) {
+		// TODO: may be use compatibility methods
 		if ( isset( $values['renewing_key'] ) ) {
-			$item->add_meta_data( __( '_renewing_key', 'license-wp' ), $values['renewing_key'], true );
+			$item->add_meta_data( '_renewing_key', $values['renewing_key'], true );
 		}
 	}
-
 }

@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /** @var $license \Never5\LicenseWP\License\License */
-/** @var $product WC_Product_Variable */
+/** @var $product WC_Product_Variation */
 
 // find current license variation term (for name in table)
 $current_license_term = \Never5\LicenseWP\WooCommerce\Product::get_license_term_of_product( $product );
@@ -76,13 +76,12 @@ $license_options = \Never5\LicenseWP\WooCommerce\Product::get_available_upgrade_
 		</p>
 		<?php do_action( 'license_wp_license_upgrade_fields_after_price' ); ?>
 
-
 	</div>
 
 	<div class="clear"></div>
 	<p>
 		<input type="hidden" name="license_key" value="<?php echo esc_attr( $license->get_key() ); ?>" />
-		<input type="submit" class="button" name="submit_upgrade_license" value="<?php _e( 'Upgrade License', 'license-wp' ); ?>"/>
+		<input type="submit" class="button" name="submit_upgrade_license" value="<?php _e( 'Upgrade License', 'license-wp' ); ?>" />
 	</p>
 
 	<?php do_action( 'license_wp_license_upgrade_after_fields' ); ?>

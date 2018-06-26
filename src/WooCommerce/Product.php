@@ -120,7 +120,7 @@ class Product {
 	/**
 	 * Get WordPress term object of license of WC_Product_Variable
 	 *
-	 * @param \WC_Product_Variable $product
+	 * @param \WC_Product_Variation $product
 	 *
 	 * @return object
 	 */
@@ -133,7 +133,7 @@ class Product {
 	/**
 	 * Get available upgrade options
 	 *
-	 * @param \WC_Product_Variable $product
+	 * @param \WC_Product_Variation $product
 	 * @param \Never5\LicenseWP\License\License $license
 	 *
 	 * @return array

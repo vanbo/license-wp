@@ -23,9 +23,8 @@ class AddLicense extends SubPage {
 			}
 		} );
 
-
 		// add custom ajax endpoint
-		add_action( 'wp_ajax_wpl_add_license_get_email', array( $this, 'ajax_get_email' ) );		
+		add_action( 'wp_ajax_wpl_add_license_get_email', array( $this, 'ajax_get_email' ) );
 	}
 
 	/**
@@ -64,7 +63,6 @@ class AddLicense extends SubPage {
 			array( 'jquery', 'jquery-ui-datepicker', 'select2' ),
 			license_wp()->get_version()
 		);
-
 	}
 
 	/**
@@ -173,15 +171,12 @@ class AddLicense extends SubPage {
 
 				$admin_message = sprintf( __( 'License key has been emailed to %s.', 'license-wp' ), $activation_email );
 				echo sprintf( '<div class="updated"><p>%s</p></div>', $admin_message );
-
 			} else {
 				throw new \Exception( __( 'Could not create license!', 'license-wp' ) );
 			}
-
-
-		} catch ( \Exception $e ) {
+		}
+		catch ( \Exception $e ) {
 			echo sprintf( '<div class="error"><p>%s</p></div>', $e->getMessage() );
 		}
 	}
-
 }

@@ -31,9 +31,13 @@ class MyAccount {
 		$licenses = license_wp()->service( 'license_manager' )->get_licenses_by_user( get_current_user_id() );
 
 		if ( count( $licenses ) > 0 ) {
-			wc_get_template( 'my-licenses.php', array( 'licenses' => $licenses ), 'license-wp', license_wp()->service( 'file' )->plugin_path() . '/templates/' );
+			wc_get_template(
+				'my-licenses.php',
+				array( 'licenses' => $licenses ),
+				'license-wp',
+				license_wp()->service( 'file' )->plugin_path() . '/templates/'
+			);
 		}
-
 	}
 
 	/**
@@ -84,8 +88,6 @@ class MyAccount {
 			if ( license_wp()->service( 'activation_manager' )->deactivate( $activation ) ) {
 				wc_add_notice( __( 'License successfully deactivated.', 'license-wp' ), 'success' );
 			}
-
 		}
 	}
-
 }

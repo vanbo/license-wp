@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <?php if ( count( $licenses ) > 0 ) : ?>
 
 	<h2><?php _e( 'License Keys', 'license-wp' ); ?></h2>
