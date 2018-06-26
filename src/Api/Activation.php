@@ -204,12 +204,12 @@ class Activation {
 		// calculate activations left
 		$activations_left = ( ( $license->get_activation_limit() > 0 ) ? $license->get_activation_limit() - count( $license->get_activations( $api_product ) ) : - 1 );
 
-		// response
+		// Response
 		$response = apply_filters( 'license_wp_api_activation_response', array(
 			'success'   => true,
 			'activated' => true,
 			'remaining' => $activations_left
-		) );
+		), $activation, $license );
 
 		// send JSON the WP way
 		wp_send_json( $response );
