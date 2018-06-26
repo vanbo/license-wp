@@ -1,19 +1,6 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 if ( sizeof( $licenses ) > 0 ) : ?>
-
-	<style>
-		@media screen and (max-width: 880px) {
-			table.my_account_api_license_keys {
-				display: block;
-				overflow-x: auto;
-			}
-		}
-	</style>
 
 	<h2><?php _e( 'Licenses', 'license-wp' ); ?></h2>
 	<table class="shop_table my_account_orders my_account_api_license_keys">
@@ -41,8 +28,7 @@ if ( sizeof( $licenses ) > 0 ) : ?>
 				<td class="lwp_licenses_code">
 					<code style="display:block;"><?php echo $license->get_key(); ?></code>
 					<small>
-						<?php printf( __( 'Activation email: %s', 'license-wp' ), $license->get_activation_email() ); ?>
-						<br />
+						<?php printf( __( 'Activation email: %s', 'license-wp' ), $license->get_activation_email() ); ?><br/>
 						<?php if ( $license->get_date_expires() ) : ?>
 							<?php if ( ! $license->is_expired() ) : ?>
 								<?php printf( __( 'Expiry date: %s.', 'license-wp' ), $license->get_date_expires()->format( get_option( 'date_format' ) ) ); ?>
@@ -57,7 +43,7 @@ if ( sizeof( $licenses ) > 0 ) : ?>
 						printf( __( '%d per product', 'license-wp' ), absint( $license->get_activation_limit() ) );
 
 						// only show upgrade for non-expired
-						if ( ! $license->is_expired() ) {
+						if( ! $license->is_expired() ) {
 							// get available upgrade license options
 							$license_options = \Never5\LicenseWP\WooCommerce\Product::get_available_upgrade_options( wc_get_product( $license->get_product_id() ), $license );
 
@@ -66,6 +52,7 @@ if ( sizeof( $licenses ) > 0 ) : ?>
 								echo '<br/><a class="button lwp_button_upgrade" href="' . $license->get_upgrade_url() . '">' . __( 'Upgrade License', 'license-wp' ) . '</a>';
 							}
 						}
+
 					} else {
 						_e( 'Unlimited', 'license-wp' );
 					}
@@ -88,19 +75,17 @@ if ( sizeof( $licenses ) > 0 ) : ?>
 					}
 					?></td>
 			</tr>
-			<?php if ( ! $license->is_expired() ) : ?>
+			<?php if( ! $license->is_expired() ) : ?>
 			<?php foreach ( $activations as $activation ) : ?>
-				<?php
-				/** @var \Never5\LicenseWP\Activation\Activation $activation */
-				?>
-				<tr>
-					<td colspan="3" class="lwp_licenses_activation">
-						<?php echo get_the_title( $activation->get_api_product_post_id() ); ?> &mdash;
-						<a href="<?php echo esc_attr( $activation->get_instance() ); ?>" target="_blank"><?php echo esc_html( $activation->get_instance() ); ?></a>
-						<a class="button" style="float:right" href="<?php echo $activation->get_deactivate_url( $license ); ?>"><?php _e( 'Deactivate', 'license-wp' ); ?></a>
-					</td>
-				</tr>
-			<?php endforeach; ?>
+			<?php
+			/** @var \Never5\LicenseWP\Activation\Activation $activation */
+			?>
+			<tr>
+				<td colspan="3" class="lwp_licenses_activation">
+					<?php echo get_the_title(  $activation->get_api_product_post_id() ); ?> &mdash; <a href="<?php echo esc_attr( $activation->get_instance() ); ?>" target="_blank"><?php echo esc_html( $activation->get_instance() ); ?></a> <a class="button" style="float:right" href="<?php echo $activation->get_deactivate_url($license); ?>"><?php _e( 'Deactivate', 'license-wp' ); ?></a>
+				</td>
+			</tr>
+		<?php endforeach; ?>
 		<?php endif; ?>
 		<?php endforeach; ?>
 		</tbody>

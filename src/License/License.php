@@ -29,7 +29,7 @@ class License {
 	/** @var \DateTime */
 	private $date_created;
 
-	/** @var \DateTime|bool */
+	/** @var \DateTimeImmutable|bool */
 	private $date_expires = false;
 
 	/**
@@ -131,7 +131,7 @@ class License {
 	}
 
 	/**
-	 * @return \DateTime
+	 * @return \DateTimeImmutable
 	 */
 	public function get_date_expires() {
 		return $this->date_expires;
@@ -152,11 +152,37 @@ class License {
 	public function is_expired() {
 
 		// check if license expired
-		if ( $this->get_date_expires() && $this->get_date_expires() < new \DateTime() ) {
+		if ( $this->get_date_expires() && $this->get_date_expires()->modify( "+1 day" ) < new \DateTime() ) {
 			return true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * First we check if there is an order attached to this license.
+	 * If there is an order attached, we check if it has an 'allowed' status
+	 *
+	 * @return bool
+	 */
+	public function has_valid_order_status() {
+
+		if ( $this->get_order_id() > 0 ) {
+
+			// get order
+			$order = wc_get_order( $this->get_order_id() );
+
+			if ( false !== $order ) {
+
+				if ( ! in_array( $order->get_status(), apply_filters( 'license_wp_license_valid_order_statuses', array( 'completed' ) ) ) ) {
+					return false;
+				}
+
+			}
+
+		}
+
+		return true;
 	}
 
 	/**
@@ -244,7 +270,6 @@ class License {
 	 * @return string
 	 */
 	public function get_upgrade_url() {
-		// TODO: Add a setting to set this page. It will be easier to use
 		$page = get_page_by_title( apply_filters( 'license_wp_license_upgrade_page_title', 'upgrade license' ) );
 
 		return apply_filters( 'license_wp_license_upgrade_url', add_query_arg( array(

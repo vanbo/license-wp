@@ -58,12 +58,17 @@ class Update {
 				throw new UpdateException( sprintf( __( '<strong>Update error:</strong> The provided license is invalid. <a href="%s" target="_blank">Purchase a valid license</a> to receive updates and support.', 'license-wp' ), $purchase_url ), 'invalid_key' );
 			}
 
+			// check if license is linked to order and if so, if the order is not refunded
+			if ( ! $license->has_valid_order_status() ) {
+				throw new UpdateException( sprintf( __( '<strong>Update error:</strong> The order used to purchase this license has an invalid status. <a href="%s" target="_blank">Purchase a valid license</a> to receive updates and support.', 'license-wp' ), $purchase_url ), 'invalid_order_status' );
+			}
+
 			// get api product by given api product id (slug)
 			$api_product = $license->get_api_product_by_slug( $request['api_product_id'] );
 
 			// check if license grants access to request api product
 			if ( null === $api_product ) {
-				throw new UpdateException( sprintf( __( '<strong>Update error:</strong> This license does not allow access to the requested product. <a href="%s" target="_blank">Purchase a valid license</a> to receive updates and support.', 'license-wp' ), $purchase_url ), 'no_api_product_access' );
+				throw new UpdateException( sprintf( __( '<strong>Update error:</strong> This license does not allow access to the requested product. <a href="%s" target="_blank">Purchase a valid license</a> to receive updates and support.', 'license-wp' ), $purchase_url), 'no_api_product_access' );
 			}
 
 			// check if license expired
@@ -102,8 +107,9 @@ class Update {
 					$this->plugin_information( $license, $api_product, $request );
 					break;
 			}
-		}
-		catch ( UpdateException $e ) {
+
+
+		} catch ( UpdateException $e ) {
 
 			$response = new \stdClass();
 
@@ -131,16 +137,17 @@ class Update {
 			}
 
 			$response->errors = $e->__toArray();
-			die( serialize( $response ) );
+			$this->send_data( $response );
 		}
+
 	}
 
 	/**
 	 * WordPress update check
 	 *
-	 * @param \Never5\LicenseWP\License\License       $license
+	 * @param \Never5\LicenseWP\License\License $license
 	 * @param \Never5\LicenseWP\ApiProduct\ApiProduct $api_product
-	 * @param array                                   $request
+	 * @param array $request
 	 *
 	 * @throws ApiException
 	 */
@@ -153,18 +160,17 @@ class Update {
 		$data->url         = $api_product->get_uri();
 		$data->package     = $api_product->get_download_url( $license );
 
-		$data = apply_filters( 'license_wp_api_update_check_data', $data, $license, $api_product, $request );
-
 		// send data
-		die( serialize( $data ) );
+		$this->send_data( $data );
+
 	}
 
 	/**
 	 * WordPress update check
 	 *
-	 * @param \Never5\LicenseWP\License\License       $license
+	 * @param \Never5\LicenseWP\License\License $license
 	 * @param \Never5\LicenseWP\ApiProduct\ApiProduct $api_product
-	 * @param array                                   $request
+	 * @param array $request
 	 *
 	 * @throws ApiException
 	 */
@@ -208,9 +214,23 @@ class Update {
 		// download link
 		$data->download_link = $api_product->get_download_url( $license );
 
-		$data = apply_filters( 'license_wp_api_update_information_data', $data, $license, $api_product, $request );
-
 		// send data
-		die( serialize( $data ) );
+		$this->send_data( $data );
+	}
+
+	/**
+	 * Send API response back to client.
+	 *
+	 * @param array|object $data
+	 */
+	private function send_data( $data ) {
+		if ( isset( $_SERVER['HTTP_ACCEPT'] ) && 'application/json' === $_SERVER['HTTP_ACCEPT'] ) {
+			wp_send_json( $data );
+			exit;
+		}
+
+		header( 'Content-type: text/plain' );
+		echo serialize( $data );
+		exit;
 	}
 }

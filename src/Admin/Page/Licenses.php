@@ -51,7 +51,7 @@ class Licenses extends Page {
 	}
 
 	/**
-	 * List licenses
+	 * List licences
 	 */
 	public function list_licenses() {
 		// create list table
