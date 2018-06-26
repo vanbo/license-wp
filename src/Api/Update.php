@@ -162,6 +162,7 @@ class Update {
 
 		// send data
 		$this->send_data( $data );
+		$data = apply_filters( 'license_wp_api_update_check_data', $data, $license, $api_product, $request );
 
 	}
 
