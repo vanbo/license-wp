@@ -29,7 +29,14 @@ class Log {
 			'api_product_id'   => $product_id,
 			'date_downloaded'  => current_time( 'mysql' ),
 			'user_ip_address'  => sanitize_text_field( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'] )
-		) );
+		),
+			array(
+				'%s',
+				'%s',
+				'%s',
+				'%d',
+				'%s',
+			));
 
 		// success
 		return true;

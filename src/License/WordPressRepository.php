@@ -89,7 +89,16 @@ class WordPressRepository implements Repository {
 			$data['license_key'] = $license->get_key();
 
 			// insert into WordPress database
-			$wpdb->insert( $wpdb->lwp_licenses, $data );
+			$wpdb->insert( $wpdb->lwp_licenses, $data, array(
+				'%s',
+				'%d',
+				'%d',
+				'%s',
+				'%d',
+				'%d',
+				'%s',
+				'%s',
+			) );
 		} else { // update
 
 			// unset license from data
@@ -100,7 +109,18 @@ class WordPressRepository implements Repository {
 				$data,
 				array(
 					'license_key' => $license->get_key()
-				)
+				),
+				array(
+					'%s',
+					'%d',
+					'%d',
+					'%s',
+					'%d',
+					'%d',
+					'%s',
+					'%s',
+				),
+				array( '%s' )
 			);
 
 		}
