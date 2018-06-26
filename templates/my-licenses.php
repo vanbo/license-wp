@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( sizeof( $licenses ) > 0 ) : ?>
 
 	<h2><?php _e( 'Licenses', 'license-wp' ); ?></h2>
