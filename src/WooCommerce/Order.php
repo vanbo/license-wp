@@ -139,7 +139,7 @@ class Order {
 					$_upgrading_key = false;
 					foreach ( $item['item_meta'] as $meta_key => $meta_value ) {
 						if ( $meta_key == '_upgrading_key' ) {
-							$_upgrading_key = $meta_value[0];
+							$_upgrading_key = is_array($meta_value) ? $meta_value[0] : $meta_value;
 						}
 					}
 
