@@ -229,6 +229,7 @@ class Update {
 			wp_send_json( $data );
 			exit;
 		}
+		$data = apply_filters( 'license_wp_api_update_information_data', $data, $license, $api_product, $request );
 
 		header( 'Content-type: text/plain' );
 		echo serialize( $data );
