@@ -11,18 +11,18 @@ class Order {
 	 */
 	public function setup() {
 
-		// display keys in order edit screen
+		// Display keys in order edit screen
 		add_action( 'woocommerce_order_actions_end', array( $this, 'display_keys' ) );
 
-		// hook into WooCommerce order completed status
+		// Hook into WooCommerce order completed status
 		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );
 
-		// delete license related data on order delete
+		// Delete license related data on order delete
 		add_action( 'delete_post', array( $this, 'order_delete' ) );
 	}
 
 	/**
-	 * Dislay lincense keys
+	 * Display license keys
 	 *
 	 * @param int $order_id
 	 */
