@@ -160,10 +160,10 @@ class Update {
 		$data->url         = $api_product->get_uri();
 		$data->package     = $api_product->get_download_url( $license );
 
-		// send data
-		$this->send_data( $data );
 		$data = apply_filters( 'license_wp_api_update_check_data', $data, $license, $api_product, $request );
 
+		// send data
+		$this->send_data( $data );
 	}
 
 	/**
@@ -215,6 +215,8 @@ class Update {
 		// download link
 		$data->download_link = $api_product->get_download_url( $license );
 
+		$data = apply_filters( 'license_wp_api_update_information_data', $data, $license, $api_product, $request );
+
 		// send data
 		$this->send_data( $data );
 	}
@@ -229,7 +231,6 @@ class Update {
 			wp_send_json( $data );
 			exit;
 		}
-		$data = apply_filters( 'license_wp_api_update_information_data', $data, $license, $api_product, $request );
 
 		header( 'Content-type: text/plain' );
 		echo serialize( $data );
