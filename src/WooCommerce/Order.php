@@ -49,7 +49,7 @@ class Order {
 		}
 
 		// create \WC_Order
-		$order   = new \WC_Order( $order_id );
+		$order   = wc_get_order( $order_id );
 		$has_key = false;
 
 		$previous_license_keys = array();
