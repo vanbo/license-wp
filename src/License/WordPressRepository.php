@@ -95,8 +95,8 @@ class WordPressRepository implements Repository {
 
 			// insert into WordPress database
 			$wpdb->insert( $wpdb->lwp_licenses, $data, array(
-				'%s',
 				'%d',
+				'%s',
 				'%d',
 				'%s',
 				'%d',
@@ -116,10 +116,9 @@ class WordPressRepository implements Repository {
 					'license_key' => $license->get_key()
 				),
 				array(
-					'%s',
-					'%d',
 					'%d',
 					'%s',
+					'%d',
 					'%d',
 					'%d',
 					'%s',
