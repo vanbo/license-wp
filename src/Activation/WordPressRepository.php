@@ -68,13 +68,7 @@ class WordPressRepository implements Repository {
 		if ( 0 === $activation->get_id() ) { // insert
 
 			// insert into WordPress database
-			$wpdb->insert( $wpdb->lwp_activations, $data, array(
-				'%s',
-				'%s',
-				'%s',
-				'%s',
-				'%s',
-			) );
+			$wpdb->insert( $wpdb->lwp_activations, $data );
 
 			// set activation id
 			$activation->set_id( $wpdb->insert_id );
@@ -97,10 +91,8 @@ class WordPressRepository implements Repository {
 					'%d'
 				)
 			);
-
 		}
 
 		return $activation;
 	}
-
 }
